@@ -1,7 +1,11 @@
 <template>
   <div class="container">
     <Header title="Hola, soy un prop" />
-    <Tasks v-bind:tasks="tasks" />
+    <Tasks
+      v-on:toggle-reminder="handleToggle"
+      v-on:delete-task="handleDelete"
+      v-bind:tasks="tasks"
+    />
   </div>
 </template>
 
@@ -15,11 +19,23 @@ export default {
     Header,
     Tasks,
   },
-    data() {
-      return {
-        tasks: [],
-      };
+  methods: {
+    handleDelete(id) {
+      if (confirm("Seguro?")) {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+      }
     },
+    handleToggle(id) {
+      this.tasks = this.tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task
+      );
+    },
+  },
+  data() {
+    return {
+      tasks: [],
+    };
+  },
   created() {
     this.tasks = [
       {
