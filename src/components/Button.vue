@@ -1,6 +1,6 @@
 <template>
     <button 
-        v-on:click="onClick"
+        v-on:click="formToggle"
         v-bind:style="{background: color}" 
         class="btn"
         >
@@ -16,8 +16,8 @@ export default {
         color: String
     },
     methods: {
-        onClick() {
-            console.log('click')
+        formToggle() {
+            console.log('Ill toggle the form')
         }
     }
 }

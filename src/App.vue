@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <Header title="Hola, soy un prop" />
+    <AddTask v-on:new-task-emit="handleNewTask" />
     <Tasks
       v-on:toggle-reminder="handleToggle"
       v-on:delete-task="handleDelete"
@@ -12,10 +13,11 @@
 <script>
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
-
+import AddTask from "./components/AddTask"
 export default {
   name: "App",
   components: {
+    AddTask,
     Header,
     Tasks,
   },
@@ -30,10 +32,14 @@ export default {
         task.id === id ? { ...task, reminder: !task.reminder } : task
       );
     },
+    handleNewTask(newTask){
+       this.tasks = [newTask, ...this.tasks];
+    }
   },
   data() {
     return {
       tasks: [],
+      showAddTask: false
     };
   },
   created() {
