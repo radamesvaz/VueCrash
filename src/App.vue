@@ -1,7 +1,16 @@
 <template>
   <div class="container">
-    <Header title="Hola, soy un prop" />
-    <AddTask v-on:new-task-emit="handleNewTask" />
+    <Header
+      v-on:toggle-add-task="handleToggleForm"
+      v-bind:showAddButton="showAddTask"
+      title="Hola, soy un prop"
+      />
+    <div>
+      <AddTask
+        v-if="showAddTask" 
+        v-on:new-task-emit="handleNewTask" 
+        />
+    </div>
     <Tasks
       v-on:toggle-reminder="handleToggle"
       v-on:delete-task="handleDelete"
@@ -34,6 +43,9 @@ export default {
     },
     handleNewTask(newTask){
        this.tasks = [newTask, ...this.tasks];
+    },
+    handleToggleForm(){
+      this.showAddTask = !this.showAddTask
     }
   },
   data() {

@@ -17,7 +17,7 @@ export default {
     },
     methods: {
         formToggle() {
-            console.log('Ill toggle the form')
+            this.$emit('btn-click')
         }
     }
 }
