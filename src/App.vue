@@ -31,27 +31,64 @@ export default {
     Tasks,
   },
   methods: {
-    handleDelete(id) {
+    async handleDelete(id) {
       if (confirm("Seguro?")) {
-        this.tasks = this.tasks.filter((task) => task.id !== id);
+
+        const res = await fetch(`api/tasks/${id}`, {
+          method: 'DELETE'
+        })
+
+        res.status === 200
+          ?( this.tasks = this.tasks.filter((task) => task.id !== id) )
+          : alert('Error deleting task')
+
       }
     },
-    handleToggle(id) {
+    async handleToggle(id) {
+
+      const taskToToggle = await this.fetchTask(id);
+      const updateTask = {...taskToToggle, reminder : !taskToToggle.reminder}
+
+      const res = await fetch(`api/tasks/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(updateTask)
+      });
+
+      const data = await res.json();
+      // Error aqui
       this.tasks = this.tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task
+        task.id === id ? { ...task, reminder: !data.reminder } : task
       );
     },
-    handleNewTask(newTask){
-       this.tasks = [newTask, ...this.tasks];
+    async handleNewTask(newTask){
+       const res = await fetch('api/tasks', {
+         method: 'POST',
+         headers: {
+           'Content-type': 'application/json',
+         },
+           body: JSON.stringify(newTask)
+       })
+
+       const data = await res.json();
+       
+       this.tasks = [data, ...this.tasks];
     },
     handleToggleForm(){
       this.showAddTask = !this.showAddTask
     },
     async fetchTasks(){
-      const res = await fetch('http://localhost:5000/tasks');
+      const res = await fetch('api/tasks');
       const data = await res.json();
       return data
-    }
+    },
+    async fetchTask(id){
+      const res = await fetch(`api/tasks/${id}`);
+      const data = await res.json();
+      return data
+    },
   },
   data() {
     return {
